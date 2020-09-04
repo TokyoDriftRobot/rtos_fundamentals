@@ -23,13 +23,13 @@ void led_blue_on() {
 }
 
 void led_red_on() {
-	PTB->PDOR = MASK(LED_GREEN_PIN);
+	PTB->PDOR = ~MASK(LED_RED_PIN);
 	PTD->PDOR = MASK(LED_BLUE_PIN);
 }
 
 void led_green_on() {
 	PTD->PDOR = MASK(LED_BLUE_PIN);
-	PTB->PDOR = MASK(LED_RED_PIN);
+	PTB->PDOR = ~MASK(LED_GREEN_PIN);
 }
 
 color_t led_control(color_t led_color) {
