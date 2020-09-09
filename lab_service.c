@@ -8,7 +8,7 @@
 
 color_t led_color = LED_BLUE_COLOR;
 
-void lab_one(void) {
+void lab_two(void) {
 	led_init_gpio();
 	while (1) {
 		led_color = led_control(led_color);
@@ -17,7 +17,7 @@ void lab_one(void) {
 }
 
 
-void lab_two() {
+void lab_three() {
 	switch_button_init();
 	led_init_gpio();
 	led_color = led_control(led_color);
