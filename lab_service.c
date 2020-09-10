@@ -1,6 +1,5 @@
 #include "led_service.h"
 #include "delay_service.h" 
-#include "delay_service.h"
 #include "utils.h"
 #include "lab_service.h"
 #include "switch_service.h"
@@ -30,11 +29,8 @@ void lab_four (void) {
 	
 	int counter = 0;
 	const int n_notes = 7;
-	const int clock_freq = 48000000;
 	const int ps = 128;
-	int notes[n_notes] = {262, 294, 330, 349, 392, 440, 494};
-	int pwm_period = 0; 
-	int pwm_duty_cycle = 0; 
+	int notes[n_notes] = {PWM_NOTE_C, PWM_NOTE_D, PWM_NOTE_E, PWM_NOTE_F, PWM_NOTE_G, PWM_NOTE_A, PWM_NOTE_B};
 	
 	led_color = LED_BLUE_COLOR;
 	
@@ -42,8 +38,8 @@ void lab_four (void) {
 		led_color = led_control(led_color);
 
 		counter = counter % n_notes;
-	  pwm_period = pwn_calculate_period(clock_freq, notes[counter], ps); 
-    pwm_duty_cycle = pwm_calculate_duty_cycle(clock_freq, notes[counter], ps, 0.1); 
+	  int pwm_period = pwn_calculate_period(CLOCK_FREQ, notes[counter], ps); 
+    int pwm_duty_cycle = pwm_calculate_duty_cycle(CLOCK_FREQ, notes[counter], ps, 0.1); 
 		pwm_init(pwm_period, pwm_duty_cycle);
 		counter += 1;
 
