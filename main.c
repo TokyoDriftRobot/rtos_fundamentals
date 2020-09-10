@@ -32,28 +32,23 @@ int main (void) {
 	/* Select counter increment on counter clock */
 	TPM1->SC |= TPM_SC_CMOD(1);
 	
-	/* Select half of max modulo value */
-	TPM1->MOD = 0x7FFF;               
+	/* Determine EPWM period */
+	TPM1->MOD = 7500; // Set modulo value 48_000_000 / 128 = 375000 / 7500 = 50Hz                
 	
 	/* Select counter to operate in up counting mode */
 	TPM1->SC &= ~(TPM_SC_CPWMS_MASK);
 
-  /* Set timer to edge-aligned pwm mode */
+  /* Set timer to EPWM mode */
 	TPM1_C0SC &= ~((TPM_CnSC_ELSB_MASK) | (TPM_CnSC_ELSA_MASK) | (TPM_CnSC_MSB_MASK) | (TPM_CnSC_MSA_MASK));
 	TPM1_C0SC |= (TPM_CnSC_ELSB(1) | TPM_CnSC_MSB(1));
 	
 	/* Enable global IRQs */
 	__enable_irq();  
 	
-	TPM1_C0V = 0x0EA6;
+	SystemCoreClockUpdate();
+	/* Determine pulse width (duty cycle) */
+	TPM1_C0V = 0x0EA6; // 0x0EA6 = 3750 (half of 7500) -> 50% Duty Cycle
 	TPM1_C1V = 0x753;
 
 	while (1);
-}
-
-void TPM1_IRQHandler(void) {
-	led_color = led_control(led_color);
-	/* Clear TOF */
-//	TPM1->SC |= TPM_SC_TOF(1);
-  TPM1_C0SC |= TPM_CnSC_CHF(1);  
 }
