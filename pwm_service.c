@@ -23,14 +23,14 @@ void pwm_init(int pwn_period, int pwm_duty_cycle) {
 	/* Select PTB1 to connect to TPM */
 	PORTB->PCR[PWM_PTB1_PIN] &= ~PORT_PCR_MUX_MASK;
 	PORTB->PCR[PWM_PTB1_PIN] |= PORT_PCR_MUX(3);	
+
+  /* Enable clock to TPM1 */
+	SIM->SCGC6 |= SIM_SCGC6_TPM1_MASK;
 	
 	/* Select MCGFLLCLK as timer counter clock */
 	SIM->SOPT2 &= ~SIM_SOPT2_TPMSRC_MASK;
 	SIM->SOPT2 |= SIM_SOPT2_TPMSRC(1);
-	
-  /* Enable clock to TPM1 */
-	SIM->SCGC6 |= SIM_SCGC6_TPM1_MASK;
-	
+
 	/* Disable timer while configuring */
 	TPM1->SC &= ~((TPM_SC_CMOD_MASK) | (TPM_SC_PS_MASK));
 	
@@ -45,12 +45,15 @@ void pwm_init(int pwn_period, int pwm_duty_cycle) {
 	/* Determine EPWM period */
 	TPM1->MOD = pwn_period;
 	
+  /* Set timer to EPWM mode for PTB0 */
+	TPM1_C0SC &= ~((TPM_CnSC_ELSB_MASK) | (TPM_CnSC_ELSA_MASK) | (TPM_CnSC_MSB_MASK) | (TPM_CnSC_MSA_MASK));
+	TPM1_C0SC |= (TPM_CnSC_ELSB(1) | TPM_CnSC_MSB(1));
+	
+  /* Set timer to EPWM mode for PTB1 */
+	TPM1_C1SC &= ~((TPM_CnSC_ELSB_MASK) | (TPM_CnSC_ELSA_MASK) | (TPM_CnSC_MSB_MASK) | (TPM_CnSC_MSA_MASK));
+	TPM1_C1SC |= (TPM_CnSC_ELSB(1) | TPM_CnSC_MSB(1));
+	
 	/* Determine pulse width (duty cycle) */
 	TPM1_C0V = pwm_duty_cycle;
 	TPM1_C1V = pwm_duty_cycle;
-
-
-  /* Set timer to EPWM mode */
-	TPM1_C0SC &= ~((TPM_CnSC_ELSB_MASK) | (TPM_CnSC_ELSA_MASK) | (TPM_CnSC_MSB_MASK) | (TPM_CnSC_MSA_MASK));
-	TPM1_C0SC |= (TPM_CnSC_ELSB(1) | TPM_CnSC_MSB(1));
 }

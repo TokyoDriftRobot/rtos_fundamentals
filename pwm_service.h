@@ -1,5 +1,6 @@
 #define PWM_PTB0_PIN 0
 #define PWM_PTB1_PIN 1
+
 #define PWM_NOTE_C 262
 #define PWM_NOTE_D 294
 #define PWM_NOTE_E 330
