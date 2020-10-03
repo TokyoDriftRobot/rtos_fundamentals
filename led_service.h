@@ -15,3 +15,6 @@ void led_init_gpio(void);
 void led_red_on(void);
 void led_blue_on(void);
 void led_green_on(void);
+void led_off_rgb(void);
+void led_red_thread(void *);
+void led_green_thread(void *);

@@ -1,4 +1,6 @@
 #include "MKL25Z4.h" 
+#include "RTE_Components.h"
+#include "cmsis_os2.h"
 #include "led_service.h"
 #include "utils.h"
 
@@ -46,4 +48,27 @@ color_t led_control(color_t led_color) {
         return LED_BLUE_COLOR;
     }
 		return LED_BLUE_COLOR;
+}
+
+void led_off_rgb() {
+	PTD->PDOR = MASK(LED_BLUE_PIN);
+	PTB->PDOR = (MASK(LED_RED_PIN) | MASK(LED_GREEN_PIN)); 
+}
+
+void led_red_thread(void *argument) {
+	for (;;) {
+		PTB->PDOR |= (MASK(LED_RED_PIN));
+		osDelay(1000);
+		PTB->PDOR &= (~MASK(LED_RED_PIN));
+		osDelay(1000);
+	}
+}
+
+void led_green_thread(void *argument) {
+	for (;;) {
+		PTB->PDOR |= (MASK(LED_GREEN_PIN));
+		osDelay(1000);
+		PTB->PDOR &= (~MASK(LED_GREEN_PIN));
+		osDelay(1000);
+	}
 }
