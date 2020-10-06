@@ -1,7 +1,8 @@
+#include "MKL25Z4.h" 
 #include "utils.h"
 #include "switch_service.h"
 #include "led_service.h"
-#include "MKL25Z4.h" 
+#include "uart.h"
 
 void PORTD_IRQHandler() {
 	// Clear Pending IRQ
@@ -13,4 +14,12 @@ void PORTD_IRQHandler() {
 	
 	// Clear INT Flag
 	PORTD->ISFR |= MASK(SWITCH_BUTTON_PIN);
+}
+
+void UART2_IRQHandler(void) {
+		NVIC_ClearPendingIRQ(UART2_IRQn);
+		if (UART2->S1 & UART_S1_RDRF_MASK) {
+			rx_data = UART2->D;
+			PTB->PTOR |= MASK(LED_RED_PIN);
+		}
 }

@@ -7,8 +7,10 @@
 #include "lab_service.h"
 #include "switch_service.h"
 #include "pwm_service.h"
+#include "uart.h"
 
 color_t led_color = LED_BLUE_COLOR;
+volatile uint8_t rx_data = 0;
 
 void lab_two(void) {
 	led_init_gpio();
@@ -48,6 +50,20 @@ void lab_four (void) {
 		/* Attempts to delay by 1/3 seconds */
 		delay_program(12000000);
 	}
+}
+
+void lab_five (void) {    
+	SystemCoreClockUpdate();
+	uart2_init(BAUD_RATE);
+	
+	rx_data = 0;
+	
+	SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK;
+	PORTB->PCR[LED_RED_PIN] &= ~PORT_PCR_MUX_MASK;
+	PORTB->PCR[LED_RED_PIN] |= PORT_PCR_MUX(1);
+	
+	PTB->PDDR |= MASK(LED_RED_PIN);
+	while(1);
 }
 
 void lab_six(void) {
