@@ -8,13 +8,6 @@
 #define UART_RX_PORTE23 23
 #define UART2_INT_PRIO 128
 
-static void delay(volatile uint32_t nof) {
-	while (nof != 0) {
-		__asm("NOP");
-		nof--;
-	}
-}
-
 void initUART2(uint32_t baud_rate) {
 	uint32_t divisor, bus_clock;
 	
@@ -62,8 +55,11 @@ int main (void) {
 	
 	PTB->PDDR |= MASK(LED_RED_PIN);
 	while(1) {
-		UART2_Receive_Poll();
-		// delay(0x80000);
-		PTB->PTOR |= MASK(LED_RED_PIN);
+		uint8_t data = UART2_Receive_Poll();
+		if (data == 1) {
+			PTB->PDDR |= MASK(LED_RED_PIN);
+		} else {
+			PTB->PDDR &= ~MASK(LED_RED_PIN);
+		}
 	}
 }
