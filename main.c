@@ -53,22 +53,17 @@ uint8_t UART2_Receive_Poll(void) {
 
 
 int main (void) {    
-	uint8_t rx_data = 0x69;
 	SystemCoreClockUpdate();
 	initUART2(BAUD_RATE);
-	led_init_gpio();
-	int start = 0;
-	uint8_t tx_data = 0;
-	PTB->PDOR |= (MASK(LED_RED_PIN));
+	
+	SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK;
+	PORTB->PCR[LED_RED_PIN] &= ~PORT_PCR_MUX_MASK;
+	PORTB->PCR[LED_RED_PIN] |= PORT_PCR_MUX(1);
+	
+	PTB->PDDR |= MASK(LED_RED_PIN);
 	while(1) {
-		// UART2_Transmit_Poll(rx_data);
-		tx_data = UART2_Receive_Poll();
-		if (start == 1) {
-			PTB->PDOR |= (MASK(LED_RED_PIN));
-			start = 0;
-		} else {
-			PTB->PDOR &= (~MASK(LED_RED_PIN));
-			start = 1;
-		}
+		UART2_Receive_Poll();
+		// delay(0x80000);
+		PTB->PTOR |= MASK(LED_RED_PIN);
 	}
 }
