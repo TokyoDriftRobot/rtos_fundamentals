@@ -11,7 +11,8 @@
 
 color_t led_color = LED_BLUE_COLOR;
 volatile uint8_t rx_data = 0;
-
+osMutexId_t myMutex;
+ 
 void lab_two(void) {
 	led_init_gpio();
 	while (1) {
@@ -73,6 +74,18 @@ void lab_six(void) {
 	osKernelInitialize();
 	osThreadNew(led_red_thread, NULL, NULL);
 	osThreadNew(led_green_thread, NULL, NULL);
+	osKernelStart();
+	while(1);
+}
+
+void lab_seven() {
+	SystemCoreClockUpdate();
+	led_init_gpio();
+	led_off_rgb();
+	osKernelInitialize();
+	myMutex = osMutexNew(NULL);
+	osThreadNew(led_red_mutex, NULL, NULL);
+	osThreadNew(led_green_mutex, NULL, NULL);
 	osKernelStart();
 	while(1);
 }
