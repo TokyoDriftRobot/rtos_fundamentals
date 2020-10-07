@@ -12,7 +12,7 @@
 color_t led_color = LED_BLUE_COLOR;
 volatile uint8_t rx_data = 0;
 osMutexId_t myMutex;
- 
+
 void lab_two(void) {
 	led_init_gpio();
 	while (1) {
