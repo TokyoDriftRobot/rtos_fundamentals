@@ -67,12 +67,16 @@ void lab_five (void) {
 	while(1);
 }
 
+const osThreadAttr_t thread_attr = {
+  .priority  = osPriorityHigh
+};
+
 void lab_six(void) {
 	SystemCoreClockUpdate();
 	led_init_gpio();
 	led_off_rgb();
 	osKernelInitialize();
-	osThreadNew(led_red_thread, NULL, NULL);
+	osThreadNew(led_red_thread, NULL, &thread_attr);
 	osThreadNew(led_green_thread, NULL, NULL);
 	osKernelStart();
 	while(1);

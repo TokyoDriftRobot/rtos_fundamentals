@@ -12,5 +12,5 @@
 
 
 int main (void) {    
-	lab_seven();
+	lab_six();
 }
