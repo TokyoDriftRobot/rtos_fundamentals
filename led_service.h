@@ -25,3 +25,5 @@ void led_red_thread(void *);
 void led_green_thread(void *);
 void led_red_mutex(void *);
 void led_green_mutex(void *);
+void led_red_semaphore(void *);
+void led_green_semaphore(void *);

@@ -93,3 +93,21 @@ void lab_seven() {
 	osKernelStart();
 	while(1);
 }
+
+
+osSemaphoreId_t mySem;
+void lab_eight() {
+	SystemCoreClockUpdate();
+	
+	led_init_gpio();
+	uart2_init(BAUD_RATE);
+	rx_data = 0;
+	led_off_rgb();
+	
+	osKernelInitialize();
+	mySem = osSemaphoreNew(1, 0, NULL);
+	osThreadNew(led_red_semaphore, NULL, NULL);
+	osThreadNew(led_green_semaphore, NULL, NULL);
+	osKernelStart();
+	while(1);
+}
