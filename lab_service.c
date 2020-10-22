@@ -111,3 +111,31 @@ void lab_eight() {
 	osKernelStart();
 	while(1);
 }
+
+osThreadId_t redLED_Id, greenLED_Id, blueLED_Id, control_Id;
+
+void control_thread_communication(void *argument) {
+	while (1) {
+		osThreadFlagsSet(redLED_Id, 0x0000001);
+		osDelay(1000);
+		osThreadFlagsSet(greenLED_Id, 0x0000001);
+		osDelay(1000);
+		osThreadFlagsSet(greenLED_Id, 0x0000001);
+		osThreadFlagsSet(blueLED_Id, 0x0000001);
+		osDelay(1000);
+	}
+
+}
+
+void lab_nine() {
+	SystemCoreClockUpdate();
+	led_init_gpio();
+	led_off_rgb();
+	osKernelInitialize();
+	redLED_Id = osThreadNew(led_red_communication, NULL, NULL);
+	greenLED_Id = osThreadNew(led_green_communication, NULL, NULL);
+	blueLED_Id = osThreadNew(led_blue_communication, NULL, NULL);
+	control_Id = osThreadNew(control_thread_communication, NULL, NULL);
+	osKernelStart();
+	while(1);
+}
