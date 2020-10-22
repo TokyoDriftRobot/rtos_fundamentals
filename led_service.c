@@ -97,28 +97,6 @@ void led_green_mutex(void *argument) {
 	}
 }
 
-void led_red_mutex(void *argument) {
-	for (;;) {
-		osMutexAcquire(myMutex, osWaitForever);
-		PTB->PDOR |= (MASK(LED_RED_PIN));
-		osDelay(1000);
-		PTB->PDOR &= (~MASK(LED_RED_PIN));
-		osDelay(1000);
-		osMutexRelease(myMutex);
-	}
-}
-
-void led_green_mutex(void *argument) {
-	for (;;) {
-		osMutexAcquire(myMutex, osWaitForever);
-		PTB->PDOR |= (MASK(LED_GREEN_PIN));
-		osDelay(1000);
-		PTB->PDOR &= (~MASK(LED_GREEN_PIN));
-		osDelay(1000);
-		osMutexRelease(myMutex);
-	}
-}
-
 void led_red_semaphore(void *argument) {
 	for (;;) {
 		osSemaphoreAcquire(mySem, osWaitForever);
