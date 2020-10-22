@@ -94,7 +94,6 @@ void lab_seven() {
 	while(1);
 }
 
-
 osSemaphoreId_t mySem;
 void lab_eight() {
 	SystemCoreClockUpdate();
